@@ -40,6 +40,24 @@ app.post('/api/attendance', (req, res) => {
       res.status(500).json({ message: 'Error saving attendance', error });
     });
 });
+// PUT route to update attendance data by 'staff'
+app.put('/api/attendance/update/:staff', async (req, res) => {
+  try {
+    const { staff } = req.params; // Extract 'staff' from the route parameter
+    const updatedData = req.body; // Get the updated data from the request body
+
+    // Find and update the record based on the 'staff' field
+    const result = await Attendance.findOneAndUpdate({ staff }, updatedData, { new: true });
+
+    if (!result) {
+      return res.status(404).json({ message: `Attendance record for staff '${staff}' not found.` });
+    }
+
+    res.status(200).json(result); // Send the updated record as the response
+  } catch (error) {
+    res.status(500).json({ message: 'Failed to update attendance', error });
+  }
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;

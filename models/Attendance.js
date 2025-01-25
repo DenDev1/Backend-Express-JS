@@ -2,6 +2,7 @@
 const mongoose = require('mongoose');
 
 const attendanceSchema = new mongoose.Schema({
+  _id: {type: String,required: true},
   staff: { type: String, required: true },
   day: { type: Date, required: true },
   schedule: { type: Date, required: true },

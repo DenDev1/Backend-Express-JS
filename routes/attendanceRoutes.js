@@ -27,5 +27,23 @@ router.post('/', async (req, res) => {
     res.status(500).json({ message: 'Error saving attendance', error });
   }
 });
+// Update attendance record by 'staff'
+router.put('/update/:staff', async (req, res) => {
+  try {
+    const { staff } = req.params; // Get the 'staff' parameter from the URL
+    const updatedData = req.body; // Get the updated data from the request body
+
+    // Update the attendance record by matching the 'staff' field
+    const result = await Attendance.findOneAndUpdate({ staff }, updatedData, { new: true });
+
+    if (!result) {
+      return res.status(404).send({ message: `Attendance record for staff '${staff}' not found.` });
+    }
+
+    res.status(200).send(result); // Send the updated record as the response
+  } catch (error) {
+    res.status(500).send({ message: 'Failed to update attendance.', error });
+  }
+});
 
 module.exports = router;
