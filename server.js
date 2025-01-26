@@ -58,6 +58,22 @@ app.put('/api/attendance/update/:staff', async (req, res) => {
     res.status(500).json({ message: 'Failed to update attendance', error });
   }
 });
+app.delete('/api/attendance/:staff', (req, res) => {
+  const { staff } = req.params;
+  console.log(`Deleting attendance records for staff: ${staff}`); // Log staff identifier
+
+  Attendance.deleteMany({ staff })
+    .then((result) => {
+      if (result.deletedCount === 0) {
+        return res.status(404).json({ message: 'No attendance records found for the specified staff.' });
+      }
+      res.status(200).json({ message: 'Attendance records deleted successfully.', result });
+    })
+    .catch((error) => {
+      console.error('Error deleting attendance records:', error);
+      res.status(500).json({ message: 'Failed to delete the record. Please try again later.', error });
+    });
+});
 
 // Start the server
 const PORT = process.env.PORT || 3000;
